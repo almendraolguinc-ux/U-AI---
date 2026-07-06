@@ -1,0 +1,18 @@
+{
+  "name": "rpa-admision-uai",
+  "version": "1.0.0",
+  "description": "RPA para la validación y descarga de documentos de postulantes de la UAI",
+  "main": "rpa_downloader.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node rpa_downloader.js",
+    "test-mail": "node test_mail.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "googleapis": "^173.0.0",
+    "nodemailer": "^6.9.14",
+    "playwright": "^1.45.0",
+    "xlsx": "^0.18.5"
+  }
+}

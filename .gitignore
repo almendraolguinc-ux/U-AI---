@@ -1,0 +1,24 @@
+# Ignorar todo por defecto en la carpeta
+*
+
+# Permitir archivos y carpetas del Robot RPA
+!.gitignore
+!.env.example
+!package.json
+!package-lock.json
+!rpa_downloader.js
+!google_drive_helper.js
+!auth_google.js
+!reglas_corte.json
+!README.md
+
+# Ignorar explícitamente secretos y archivos temporales de ejecución
+node_modules/
+descargas_postulantes/
+temp_downloads/
+.env
+token.json
+credentials.json
+postulantes_descargado.xlsx
+resultado_proceso_rpa_previo.xlsx
+*.log

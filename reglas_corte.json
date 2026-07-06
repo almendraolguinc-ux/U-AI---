@@ -1,0 +1,62 @@
+[
+  {
+    "carrera": "INGENIERÍA COMERCIAL - PLAN COMÚN / STGO - PEÑALOLEN 2026",
+    "nem_minimo": 6.25,
+    "puntaje_minimo": 806.4
+  },
+  {
+    "carrera": "INGENIERÍA CIVIL - PLAN COMÚN / STGO - PEÑALOLÉN 2026",
+    "nem_minimo": 6.25,
+    "puntaje_minimo": 805.0
+  },
+  {
+    "carrera": "DERECHO / STGO - PEÑALOLÉN 2026",
+    "nem_minimo": 6.15,
+    "puntaje_minimo": 763.7
+  },
+  {
+    "carrera": "PSICOLOGÍA / STGO - PEÑALOLÉN 2026",
+    "nem_minimo": 6.15,
+    "puntaje_minimo": 731.0
+  },
+  {
+    "carrera": "LICENCIATURA EN COMUNICACIÓN SOCIAL - PLAN COMÚN / STGO - PEÑALOLEN 2026",
+    "nem_minimo": 5.95,
+    "puntaje_minimo": 692.9
+  },
+  {
+    "carrera": "INGENIERÍA COMERCIAL LCS/ VIÑA - VIÑA DEL MAR 2026",
+    "nem_minimo": 6.15,
+    "puntaje_minimo": 726.0
+  },
+  {
+    "carrera": "INGENIERÍA CIVIL - PLAN COMÚN / VIÑA - VIÑA DEL MAR 2026",
+    "nem_minimo": 6.15,
+    "puntaje_minimo": 702.1
+  },
+  {
+    "carrera": "INGENIERÍA CIVIL INDUSTRIAL / VIÑA - VIÑA DEL MAR 2026",
+    "nem_minimo": 6.15,
+    "puntaje_minimo": 746.7
+  },
+  {
+    "carrera": "DERECHO /VIÑA - VIÑA DEL MAR 2026",
+    "nem_minimo": 6.05,
+    "puntaje_minimo": 719.8
+  },
+  {
+    "carrera": "PSICOLOGÍA/ VIÑA - VIÑA DEL MAR 2026",
+    "nem_minimo": 6.05,
+    "puntaje_minimo": 684.3
+  },
+  {
+    "carrera": "LICENCIATURA EN COMUNICACIÓN SOCIAL - PLAN COMÚN / VIÑA - VIÑA DEL MAR 2026",
+    "nem_minimo": 5.95,
+    "puntaje_minimo": 650.9
+  },
+  {
+    "carrera": "DOBLE TÍTULO COMERCIAL Y SOCIOLOGÍA/ STGO - PEÑALOLÉN 2026",
+    "nem_minimo": 6.25,
+    "puntaje_minimo": 763.4
+  }
+]
