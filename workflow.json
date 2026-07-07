@@ -1,0 +1,609 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        384,
+        0
+      ],
+      "id": "6621a53a-c375-4a51-91eb-0d0e8b324b0d",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "wSmDPAG3Z1B1woOY",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "resultado_proceso_rpa",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1m-PAIfSSUTmWve65cob_QifeX1b6wy7t",
+            "mode": "id"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        192,
+        0
+      ],
+      "id": "463fa8ef-8b0c-40c3-a919-25d1b5b5bee6",
+      "name": "Search files and folders",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "wSmDPAG3Z1B1woOY",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "xlsx",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        592,
+        0
+      ],
+      "id": "2f72f8f0-dc99-4d70-a788-c019118c3889",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "beda4c2d-56c4-4ccb-a8da-ab758c66d3e6",
+                    "leftValue": "={{  $json.RPA_Estado }}",
+                    "rightValue": "Pendiente de Documentos",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Pendiente de Documentos"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{  $json.RPA_Estado }}",
+                    "rightValue": "Descartado por Criterio",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "25b79481-6e17-43ad-8670-80f29d95476d"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Descartado por Criterio"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "a3b21f1c-3599-4045-893e-bc0b8845ea6b",
+                    "leftValue": "={{  $json.RPA_Estado }}",
+                    "rightValue": "Aprobado para Descarga",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Aprobado para Descarga"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "11bd4cdb-f797-49c1-a448-095d0bfdb1b5",
+                    "leftValue": "={{  $json.RPA_Estado }}",
+                    "rightValue": "Revisión Manual",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Revisión Manual"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        -32
+      ],
+      "id": "afcb2e0b-0590-47ce-90a6-a895b89f4155",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ String($json.Mail || '').trim() }}",
+        "subject": "Resultado de tu postulación a la Universidad Adolfo Ibáñez",
+        "message": "=<p>Estimado/a <strong>{{ $json.NombreCompleto }}</strong>,</p>\n\n<p>Lamentamos informarte que tu postulación a la Universidad Adolfo Ibáñez a través de la vía de Desempeño Destacado en Enseñanza Media ha sido <strong>descartada por criterio</strong>.</p>\n\n<p>Motivo: {{ $json.RPA_Motivo }}</p>\n\n<p>Si tienes dudas, puedes comunicarte con el equipo de Admisión Especial de la UAI.</p>\n\n<p>Atentamente,<br>Equipo de Admisión Especial<br>Universidad Adolfo Ibáñez</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1072,
+        -176
+      ],
+      "id": "25ee8bb0-f95f-40bc-b50e-0cdd4e05a7ce",
+      "name": "Email - Descartado por Criterio",
+      "webhookId": "286e6a32-14b9-4f54-9221-92931b7f7beb",
+      "retryOnFail": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Z6XWa2KFaK3Xin4R",
+          "name": "Gmail OAuth2 API"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "sendTo": "bernarditomylove@gmail.com",
+        "subject": "Confirmación: Documentos aprobados para descarga - UAI",
+        "message": "=={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1504,
+        16
+      ],
+      "id": "6c712376-aacc-4341-b99f-e71624e57f30",
+      "name": "Email - Aprobado para Descarga",
+      "webhookId": "eed0ead1-9336-491f-810f-3ae672981cb5",
+      "retryOnFail": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Z6XWa2KFaK3Xin4R",
+          "name": "Gmail OAuth2 API"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ String($json.Mail ?? '').normalize('NFKC').replace(/[\\u200B-\\u200D\\uFEFF]/g, '').replace(/\\s+/g, '').toLowerCase() }}",
+        "subject": "Tu postulación a UAI está pendiente de documentos",
+        "message": "=<p>Estimado/a <strong>{{ $json.NombreCompleto }}</strong>,</p>\n\n<p>Te informamos que tu postulación a la Universidad Adolfo Ibáñez tiene documentos <strong>pendientes de entrega</strong> para continuar con tu proceso.</p>\n\n<p><strong>Documentos requeridos:</strong> {{ $json.DocumentosRequeridosFaltantes || $json.DocumentosRequeridos || 'No especificado' }}</p>\n\n\n<p>Por favor, envía los documentos a la brevedad para no perder tu postulación.</p>\n\n<p>Atentamente,<br>\nEquipo de Admisión Especial<br>\nUniversidad Adolfo Ibáñez</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1072,
+        -384
+      ],
+      "id": "c7a19c95-32a0-4a32-8b3e-cf8f9bf1d90e",
+      "name": "Email - Pendiente de Documentos1",
+      "webhookId": "6ee50c76-87bc-4795-bc1e-87e2f07b02d5",
+      "retryOnFail": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Z6XWa2KFaK3Xin4R",
+          "name": "Gmail OAuth2 API"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "sendTo": "bernarditomylove@gmail.com",
+        "subject": "Tu postulación a UAI requiere revisión manual",
+        "message": "=={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1504,
+        272
+      ],
+      "id": "0922f16a-0990-4f74-8446-3325fe046fb7",
+      "name": "Email - Revision Manual",
+      "webhookId": "2e4fd33b-4e09-4df1-a992-db0c05fc359c",
+      "retryOnFail": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Z6XWa2KFaK3Xin4R",
+          "name": "Gmail OAuth2 API"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "postulantes",
+        "include": "specifiedFields",
+        "fieldsToInclude": "=NombreCompleto, Mail, RPA_Estado, RPA_Motivo, PrimeraPreferencia, SedePrimeraPreferencia, DocumentosRequeridos, UltimoComentario, MaximoPuntajePAESPrimeraPreferencia",
+        "options": {}
+      },
+      "id": "60054f77-19f8-47ae-addc-9ec6b3e27954",
+      "name": "Aggregate - Aprobado",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1072,
+        16
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "postulantes",
+        "include": "specifiedFields",
+        "fieldsToInclude": "NombreCompleto, Mail, RPA_Estado, RPA_Motivo, PrimeraPreferencia, SedePrimeraPreferencia, DocumentosRequeridos, UltimoComentario, MaximoPuntajePAESPrimeraPreferencia",
+        "options": {}
+      },
+      "id": "af3e3bd7-3791-4b83-a176-c087204e62a8",
+      "name": "Aggregate - Revision Manual",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1072,
+        272
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un asistente de admisión de la UAI. Genera un reporte HTML profesional en español para la coordinadora.\n\nLista de postulantes APROBADOS PARA DESCARGA:\n{{ JSON.stringify($json.postulantes, null, 2) }}\n\nGenera un correo HTML con:\n1. Encabezado: cantidad total de postulantes aprobados para descarga.\n2. Tabla HTML con columnas: Nombre, Carrera, Sede, Documentos Requeridos, Comentario.\n3. Una fila por cada postulante.\n4. Párrafo de cierre indicando que sus documentos serán procesados.\nResponde SOLO con el HTML del cuerpo del email.",
+        "options": {
+          "systemMessage": "Eres un asistente de admisión de la Universidad Adolfo Ibáñez. Generas reportes HTML claros y profesionales en español para la coordinadora del proceso de admisión especial. Respondes solo con HTML válido sin texto adicional."
+        }
+      },
+      "id": "d23d6007-034b-4a57-b504-08a2152788e9",
+      "name": "AI Agent - Aprobado",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        1232,
+        16
+      ],
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un asistente de admisión de la UAI. Genera un reporte HTML profesional en español para la coordinadora.\n\nLista de postulantes que requieren REVISIÓN MANUAL:\n{{ JSON.stringify($json.postulantes, null, 2) }}\n\nGenera un correo HTML con:\n1. Encabezado: cantidad total de postulantes que requieren revisión manual.\n2. Tabla HTML con columnas: Nombre, Carrera, Motivo (RPA_Motivo), Categoría Bitácora, Último Comentario.\n3. Una fila por cada postulante.\n4. Párrafo de cierre recomendando revisión individual de cada caso.\nResponde SOLO con el HTML del cuerpo del email.",
+        "options": {
+          "systemMessage": "Eres un asistente de admisión de la Universidad Adolfo Ibáñez. Generas reportes HTML claros y profesionales en español para la coordinadora del proceso de admisión especial. Respondes solo con HTML válido sin texto adicional."
+        }
+      },
+      "id": "713c25cf-26d4-4d48-a9bd-ab3a8e21d78a",
+      "name": "AI Agent - Revision Manual",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        1232,
+        272
+      ],
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "aprobado_descarga_session"
+      },
+      "id": "7e111b3a-77e5-4f23-8513-5424cdc4494a",
+      "name": "Memory - Aprobado",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1296,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        1136,
+        160
+      ],
+      "id": "37a615d5-e4f4-4267-ac8b-9b6f2d15829f",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "RvqBzo6X1jfQNts0",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "revision_manual_session"
+      },
+      "id": "2ae2592e-8e17-4ffd-a2ac-e0cc48bd94ea",
+      "name": "Memory - Revision Manual",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1296,
+        432
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                1
+              ],
+              "triggerAtHour": 10
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -16,
+        0
+      ],
+      "id": "7744e631-2c1d-4f50-a3dd-4a7ff900cad9",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Email - Pendiente de Documentos1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Email - Descartado por Criterio",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Aggregate - Aprobado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Aggregate - Revision Manual",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate - Aprobado": {
+      "main": [
+        [
+          {
+            "node": "AI Agent - Aprobado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent - Aprobado": {
+      "main": [
+        [
+          {
+            "node": "Email - Aprobado para Descarga",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent - Revision Manual": {
+      "main": [
+        [
+          {
+            "node": "Email - Revision Manual",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate - Revision Manual": {
+      "main": [
+        [
+          {
+            "node": "AI Agent - Revision Manual",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent - Aprobado",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent - Revision Manual",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memory - Aprobado": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent - Aprobado",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memory - Revision Manual": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent - Revision Manual",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email - Pendiente de Documentos1": {
+      "main": [
+        []
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Search files and folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "f2ea353c-6034-4dcc-9e4d-c17ab9b50d25",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "daef2f6e1207323c48275271d40ea614e993363f3e65107cb65c97e6deee6aff"
+  },
+  "nodeGroups": [],
+  "id": "Z5ZtUXGJ9WjLgwA6",
+  "tags": []
+}
